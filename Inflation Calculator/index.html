@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Inflation Calculator</title>
+	<link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+	<div class="background-overlay">
+		<h1>Inflation Calculator</h1>
+		<div class="container">
+			<div class="input-group">
+				<label for="inflationRate">Rate of inflation:</label>
+				<input type="number" min="0.1" id="inflationRate" placeholder="%" step="0.1">
+			</div>
+			<div class="input-group">
+				<label for="money">Current amount:</label>
+				<input type="number" min="1" id="money" placeholder="€">
+			</div>
+			<div class="input-group">
+				<label for="years">Number of years:</label>
+				<input type="number" min="1" id="years" placeholder="years">
+			</div>
+			<button onclick="inflationCalculator()">Calculate</button>
+			<div class="new-value" id="result"></div>
+		</div>
+	</div>
+	<script src="script.js"></script>
+</body>
+</html>
