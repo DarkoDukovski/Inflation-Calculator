@@ -1,5 +1,9 @@
 Inflation Calculator
+
+
 Overview
+
+
 The Inflation Calculator is a simple web application that allows users to calculate the future value of a current amount of money based on a specified rate of inflation over a certain number of years. This tool can be helpful for financial planning and understanding the effects of inflation on savings and investments.
 
 Features
@@ -18,7 +22,8 @@ How to Use
 
 1. Clone the Repository:
 
-git clone https://github.com/DarkoDukovski/Inflation-Calculator.git
+  git clone https://github.com/DarkoDukovski/Inflation-Calculator.git
+  
 cd inflation-calculator
 
 2. Open the Project:
