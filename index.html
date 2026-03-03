@@ -1,16 +1,21 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<meta name="description" content="Calculate the future purchasing power of your money with this interactive inflation calculator. See how inflation affects your savings over time.">
+	<meta name="description"
+		content="Calculate the future purchasing power of your money with this interactive inflation calculator. See how inflation affects your savings over time.">
 	<title>Inflation Calculator - Calculate Future Purchasing Power</title>
+	<link rel="icon" type="image/svg+xml"
+		href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23667eea' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='22 7 13.5 15.5 8.5 10.5 2 17'/%3E%3Cpolyline points='16 7 22 7 22 13'/%3E%3C/svg%3E">
 	<link rel="stylesheet" href="style.css">
 	<link rel="preconnect" href="https://fonts.googleapis.com">
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 	<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 </head>
+
 <body>
 	<main class="background-overlay">
 		<header class="header">
@@ -27,11 +32,12 @@
 								Rate of Inflation
 							</label>
 							<div class="input-wrapper">
-								<input type="number" min="0.1" id="inflationRate" placeholder="e.g., 3.5" step="0.1" required>
+								<input type="number" min="0.1" id="inflationRate" placeholder="e.g., 3.5" step="0.1"
+									required>
 								<span class="input-suffix" aria-hidden="true">%</span>
 							</div>
 						</div>
-						
+
 						<div class="input-group">
 							<label for="money">
 								<span class="label-icon" aria-hidden="true">💰</span>
@@ -47,7 +53,7 @@
 								</select>
 							</div>
 						</div>
-						
+
 						<div class="input-group">
 							<label for="years">
 								<span class="label-icon" aria-hidden="true">📅</span>
@@ -58,7 +64,7 @@
 								<span class="input-suffix" aria-hidden="true">years</span>
 							</div>
 						</div>
-						
+
 						<button type="submit" id="calculateBtn">
 							<span class="button-text">Calculate</span>
 							<span class="button-icon" aria-hidden="true">→</span>
@@ -74,4 +80,5 @@
 	</main>
 	<script src="script.js"></script>
 </body>
+
 </html>
