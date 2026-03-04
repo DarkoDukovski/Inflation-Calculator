@@ -129,7 +129,8 @@ h1 {
 
 .subtitle {
 	font-size: 18px;
-	color: var(--text-secondary);
+	color: #cdd0e0;
+	/* Slightly darker than #e0e0ea to find the sweet spot */
 	font-weight: 400;
 	opacity: 1;
 }
