@@ -4,22 +4,22 @@ let chartInstance = null;
 let calculatorWrapper = null;
 let backgroundOverlay = null;
 
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
 	const form = document.getElementById('calculatorForm');
 	const inputs = document.querySelectorAll('input[type="number"]');
 	const calculateBtn = document.getElementById('calculateBtn');
 	const currencySelect = document.getElementById('currency');
 	calculatorWrapper = document.querySelector('.calculator-wrapper');
 	backgroundOverlay = document.querySelector('.background-overlay');
-	
-	currencySelect.addEventListener('change', function() {
+
+	currencySelect.addEventListener('change', function () {
 		const resultContainer = document.getElementById('result');
 		if (resultContainer.querySelector('.new-value:not(.error)')) {
 			inflationCalculator();
 		}
 	});
-	
-	form.addEventListener('submit', function(e) {
+
+	form.addEventListener('submit', function (e) {
 		e.preventDefault();
 		if (calculatorWrapper && calculatorWrapper.classList.contains('has-results')) {
 			resetCalculator();
@@ -27,25 +27,25 @@ document.addEventListener('DOMContentLoaded', function() {
 			inflationCalculator();
 		}
 	});
-	
+
 	inputs.forEach(input => {
-		input.addEventListener('keypress', function(e) {
+		input.addEventListener('keypress', function (e) {
 			if (e.key === 'Enter') {
 				e.preventDefault();
 				form.requestSubmit();
 			}
 		});
-		
-		input.addEventListener('focus', function() {
+
+		input.addEventListener('focus', function () {
 			this.parentElement.classList.add('focused');
 		});
-		
-		input.addEventListener('blur', function() {
+
+		input.addEventListener('blur', function () {
 			this.parentElement.classList.remove('focused');
 		});
 	});
-	
-	calculateBtn.addEventListener('click', function(e) {
+
+	calculateBtn.addEventListener('click', function (e) {
 		this.classList.add('clicked');
 		setTimeout(() => {
 			this.classList.remove('clicked');
@@ -58,15 +58,15 @@ function resetCalculator() {
 	const chartContainer = document.getElementById('chartContainer');
 	const form = document.getElementById('calculatorForm');
 	const calculateBtn = document.getElementById('calculateBtn');
-	
+
 	if (!resultContainer) {
 		console.error('Result container not found');
 		return;
 	}
-	
+
 	resultContainer.innerHTML = '';
 	resultContainer.classList.remove('show');
-	
+
 	if (chartContainer) {
 		chartContainer.classList.remove('show');
 		chartContainer.innerHTML = '';
@@ -75,25 +75,25 @@ function resetCalculator() {
 			chartInstance = null;
 		}
 	}
-	
+
 	if (calculatorWrapper) {
 		calculatorWrapper.classList.remove('has-results');
 	}
 	if (backgroundOverlay) {
 		backgroundOverlay.classList.remove('results-visible');
 	}
-	
+
 	if (form) {
 		form.reset();
 	}
-	
+
 	if (calculateBtn) {
 		const buttonText = calculateBtn.querySelector('.button-text');
 		if (buttonText) {
 			buttonText.textContent = 'Calculate';
 		}
 	}
-	
+
 	const firstInput = document.getElementById('inflationRate');
 	if (firstInput) {
 		setTimeout(() => {
@@ -107,12 +107,12 @@ function inflationCalculator() {
 	const moneyInput = document.querySelector('#money');
 	const yearsInput = document.querySelector('#years');
 	const currencySelect = document.querySelector('#currency');
-	
+
 	if (!inflationRateInput || !moneyInput || !yearsInput || !currencySelect) {
 		console.error('Required form elements not found');
 		return;
 	}
-	
+
 	const inflationRate = parseFloat(inflationRateInput.value);
 	const money = parseFloat(moneyInput.value);
 	const years = parseFloat(yearsInput.value);
@@ -139,7 +139,7 @@ function inflationCalculator() {
 	const rateDecimal = inflationRate / 100;
 	const worth = money * Math.pow(1 + rateDecimal, years);
 
-	
+
 	const purchasingPowerLoss = worth - money;
 	const lossPercentage = ((purchasingPowerLoss / money) * 100).toFixed(2);
 
@@ -149,14 +149,15 @@ function inflationCalculator() {
 
 	const newElement = document.createElement('div');
 	newElement.className = 'new-value';
-	
+
 	const formattedMoney = formatNumber(money.toFixed(2));
 	const formattedWorth = formatNumber(worth.toFixed(2));
 	const formattedLoss = formatNumber(purchasingPowerLoss.toFixed(2));
-	
+
 	newElement.innerHTML = `
 		<div class="result-main">
-			Today's <strong>${escapeHtml(formattedMoney)}${currency}</strong> will have the same purchasing power as <strong>${escapeHtml(formattedWorth)}${currency}</strong> in <strong>${years} ${years === 1 ? 'year' : 'years'}</strong>.
+			Today's <strong>${escapeHtml(formattedMoney)}${currency}</strong> will have the same purchasing power as<br>
+			<strong>${escapeHtml(formattedWorth)}${currency}</strong> in <strong>${years} ${years === 1 ? 'year' : 'years'}</strong>.
 		</div>
 		<div class="result-loss">
 			Purchasing power loss: ${escapeHtml(formattedLoss)}${currency} (${lossPercentage}%)
@@ -164,20 +165,20 @@ function inflationCalculator() {
 	`;
 
 	resultContainer.appendChild(newElement);
-	
+
 	if (calculatorWrapper) {
 		calculatorWrapper.classList.add('has-results');
 	}
 	if (backgroundOverlay) {
 		backgroundOverlay.classList.add('results-visible');
 	}
-	
+
 	setTimeout(() => {
 		resultContainer.classList.add('show');
 	}, 50);
-	
+
 	updateChart(money, inflationRate, years, currency);
-	
+
 	const calculateBtn = document.getElementById('calculateBtn');
 	if (calculateBtn) {
 		const buttonText = calculateBtn.querySelector('.button-text');
@@ -185,32 +186,32 @@ function inflationCalculator() {
 			buttonText.textContent = 'Calculate Again';
 		}
 	}
-	
+
 }
 
 function updateChart(initialAmount, inflationRate, years, currency) {
 	const chartContainer = document.getElementById('chartContainer');
-	
+
 	if (!chartContainer) {
 		console.error('Chart container not found');
 		return;
 	}
-	
+
 	const labels = [];
 	const data = [];
 	const rateDecimal = inflationRate / 100;
-	
+
 	for (let year = 0; year <= years; year++) {
 		labels.push(year);
 		const value = initialAmount * Math.pow(1 + rateDecimal, year);
 
 		data.push(parseFloat(value.toFixed(2)));
 	}
-	
+
 	if (chartInstance) {
 		chartInstance.destroy();
 	}
-	
+
 	let canvas = chartContainer.querySelector('canvas');
 	if (!canvas) {
 		canvas = document.createElement('canvas');
@@ -218,7 +219,7 @@ function updateChart(initialAmount, inflationRate, years, currency) {
 		chartContainer.innerHTML = '';
 		chartContainer.appendChild(canvas);
 	}
-	
+
 	const ctx = canvas.getContext('2d');
 	chartInstance = new Chart(ctx, {
 		type: 'line',
@@ -266,7 +267,7 @@ function updateChart(initialAmount, inflationRate, years, currency) {
 					padding: 12,
 					displayColors: false,
 					callbacks: {
-						label: function(context) {
+						label: function (context) {
 							return `${formatNumber(context.parsed.y.toFixed(2))}${currency}`;
 						}
 					}
@@ -313,7 +314,7 @@ function updateChart(initialAmount, inflationRate, years, currency) {
 							family: 'Inter',
 							size: 13
 						},
-						callback: function(value) {
+						callback: function (value) {
 							return formatNumber(value.toFixed(0)) + currency;
 						}
 					},
@@ -329,7 +330,7 @@ function updateChart(initialAmount, inflationRate, years, currency) {
 			}
 		}
 	});
-	
+
 	setTimeout(() => {
 		chartContainer.classList.add('show');
 	}, 100);
@@ -350,22 +351,22 @@ function showError(message) {
 	const resultContainer = document.getElementById('result');
 	const chartContainer = document.getElementById('chartContainer');
 	const calculateBtn = document.getElementById('calculateBtn');
-	
+
 	if (!resultContainer) {
 		console.error('Result container not found');
 		return;
 	}
-	
+
 	if (calculatorWrapper) {
 		calculatorWrapper.classList.add('has-results');
 	}
 	if (backgroundOverlay) {
 		backgroundOverlay.classList.add('results-visible');
 	}
-	
+
 	resultContainer.innerHTML = '';
 	resultContainer.classList.remove('show');
-	
+
 	if (chartContainer) {
 		chartContainer.classList.remove('show');
 		chartContainer.innerHTML = '';
@@ -374,21 +375,21 @@ function showError(message) {
 			chartInstance = null;
 		}
 	}
-	
+
 	if (calculateBtn) {
 		const buttonText = calculateBtn.querySelector('.button-text');
 		if (buttonText) {
 			buttonText.textContent = 'Calculate Again';
 		}
 	}
-	
+
 	const errorElement = document.createElement('div');
 	errorElement.className = 'new-value error';
 	errorElement.setAttribute('role', 'alert');
 	errorElement.innerHTML = `<span class="error-message">⚠️ ${escapeHtml(message)}</span>`;
-	
+
 	resultContainer.appendChild(errorElement);
-	
+
 	setTimeout(() => {
 		resultContainer.classList.add('show');
 	}, 50);
