@@ -43,6 +43,7 @@
 									required>
 								<span class="input-suffix" aria-hidden="true">%</span>
 							</div>
+							<span class="years-error" id="rateError" aria-live="polite"></span>
 						</div>
 
 						<div class="input-group">
@@ -67,6 +68,7 @@
 									<option value="CHF">CHF</option>
 								</select>
 							</div>
+							<span class="years-error" id="moneyError" aria-live="polite"></span>
 						</div>
 
 						<div class="input-group">
@@ -84,9 +86,11 @@
 								Number of Years
 							</label>
 							<div class="input-wrapper">
-								<input type="number" min="1" id="years" placeholder="e.g., 10" step="1" required>
+								<input type="number" min="1" max="200" id="years" placeholder="e.g., 10" step="1"
+									required>
 								<span class="input-suffix" aria-hidden="true">years</span>
 							</div>
+							<span class="years-error" id="yearsError" aria-live="polite"></span>
 						</div>
 
 						<button type="submit" id="calculateBtn">

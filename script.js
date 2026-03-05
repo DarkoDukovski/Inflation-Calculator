@@ -51,6 +51,24 @@ document.addEventListener('DOMContentLoaded', function () {
 			this.classList.remove('clicked');
 		}, 150);
 	});
+
+	// Inline validation for years field
+	const yearsInput = document.getElementById('years');
+	const yearsError = document.getElementById('yearsError');
+	if (yearsInput && yearsError) {
+		yearsInput.addEventListener('input', function () {
+			const val = parseInt(this.value, 10);
+			if (val > 200) {
+				yearsError.textContent = '⚠ Maximum is 200 years.';
+				yearsError.classList.add('visible');
+				this.closest('.input-wrapper').classList.add('error-border');
+			} else {
+				yearsError.textContent = '';
+				yearsError.classList.remove('visible');
+				this.closest('.input-wrapper').classList.remove('error-border');
+			}
+		});
+	}
 });
 
 function resetCalculator() {
@@ -118,23 +136,33 @@ function inflationCalculator() {
 	const years = parseFloat(yearsInput.value);
 	const currency = currencySelect.value;
 
+	// Clear all inline errors first
+	clearFieldError('rateError', inflationRateInput);
+	clearFieldError('moneyError', moneyInput);
+	clearFieldError('yearsError', yearsInput);
+
+	let hasError = false;
+
 	if (isNaN(inflationRate) || inflationRate <= 0) {
-		showError("Please enter a valid inflation rate (greater than 0).");
-		inflationRateInput.focus();
-		return;
+		showFieldError('rateError', inflationRateInput, '⚠ Please enter a valid rate (greater than 0).');
+		if (!hasError) { inflationRateInput.focus(); }
+		hasError = true;
 	}
 
 	if (isNaN(money) || money <= 0) {
-		showError("Please enter a valid amount (greater than 0).");
-		moneyInput.focus();
-		return;
+		showFieldError('moneyError', moneyInput, '⚠ Please enter a valid amount (greater than 0).');
+		if (!hasError) { moneyInput.focus(); }
+		hasError = true;
 	}
 
-	if (isNaN(years) || years <= 0 || !Number.isInteger(years)) {
-		showError("Please enter a valid number of years (a positive whole number).");
-		yearsInput.focus();
-		return;
+	if (isNaN(years) || years <= 0 || !Number.isInteger(years) || years > 200) {
+		const msg = years > 200 ? '⚠ Maximum is 200 years.' : '⚠ Please enter a valid number of years (1–200).';
+		showFieldError('yearsError', yearsInput, msg);
+		if (!hasError) { yearsInput.focus(); }
+		hasError = true;
 	}
+
+	if (hasError) return;
 
 	const rateDecimal = inflationRate / 100;
 	const worth = money * Math.pow(1 + rateDecimal, years);
@@ -210,15 +238,17 @@ function updateChart(initialAmount, inflationRate, years, currency) {
 
 	if (chartInstance) {
 		chartInstance.destroy();
+		chartInstance = null;
 	}
 
-	let canvas = chartContainer.querySelector('canvas');
-	if (!canvas) {
-		canvas = document.createElement('canvas');
-		canvas.id = 'purchasingPowerChart';
-		chartContainer.innerHTML = '';
-		chartContainer.appendChild(canvas);
-	}
+	// Always clear and rebuild the wrapper so Chart.js gets a fresh, correctly-sized container
+	chartContainer.innerHTML = '';
+	const wrapper = document.createElement('div');
+	wrapper.className = 'chart-canvas-wrapper';
+	const canvas = document.createElement('canvas');
+	canvas.id = 'purchasingPowerChart';
+	wrapper.appendChild(canvas);
+	chartContainer.appendChild(wrapper);
 
 	const ctx = canvas.getContext('2d');
 	chartInstance = new Chart(ctx, {
@@ -242,8 +272,8 @@ function updateChart(initialAmount, inflationRate, years, currency) {
 		},
 		options: {
 			responsive: true,
-			maintainAspectRatio: true,
-			aspectRatio: 2,
+			maintainAspectRatio: false, // Required: lets Chart.js fill the wrapper div's defined height
+
 			plugins: {
 				legend: {
 					display: true,
@@ -315,7 +345,10 @@ function updateChart(initialAmount, inflationRate, years, currency) {
 							size: 13
 						},
 						callback: function (value) {
-							return formatNumber(value.toFixed(0)) + currency;
+							// If the step size is small, Chart.js passes decimals.
+							// Format it with up to 2 decimals, but drop trailing zeros for whole numbers
+							const formattedValue = Number.isInteger(value) ? value.toString() : value.toFixed(2);
+							return formatNumber(formattedValue) + currency;
 						}
 					},
 					grid: {
@@ -399,4 +432,23 @@ function escapeHtml(text) {
 	const div = document.createElement('div');
 	div.textContent = text;
 	return div.innerHTML;
+}
+
+function showFieldError(errorId, inputEl, message) {
+	const errorEl = document.getElementById(errorId);
+	if (!errorEl) return;
+	errorEl.textContent = message;
+	errorEl.classList.add('visible');
+	// Highlight the input wrapper
+	const wrapper = inputEl ? inputEl.closest('.input-wrapper, .input-wrapper-with-select') : null;
+	if (wrapper) wrapper.classList.add('error-border');
+}
+
+function clearFieldError(errorId, inputEl) {
+	const errorEl = document.getElementById(errorId);
+	if (!errorEl) return;
+	errorEl.textContent = '';
+	errorEl.classList.remove('visible');
+	const wrapper = inputEl ? inputEl.closest('.input-wrapper, .input-wrapper-with-select') : null;
+	if (wrapper) wrapper.classList.remove('error-border');
 }
