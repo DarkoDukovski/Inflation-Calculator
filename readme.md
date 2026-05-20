@@ -2,6 +2,10 @@
 
 A sleek, interactive web application that calculates the future purchasing power of money based on inflation rates. 
 
+## App Preview
+<img width="3178" height="2202" alt="darkodukovski github io_Inflation-Calculator_" src="https://github.com/user-attachments/assets/90276619-6ebe-4878-a6e4-04d55241b874" />
+<img width="3930" height="2368" alt="_D__Darko%20Dukovski_Projects_InflationCalculator_index html (4)" src="https://github.com/user-attachments/assets/9cad5039-a570-4e15-990b-07214ecd5fa0" />
+
 ## ✨ Features
 - **Accurate Math:** Uses compound interest formulas for realistic inflation projections.
 - **Visual Data:** Real-time chart visualization using Chart.js.
